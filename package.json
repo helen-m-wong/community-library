@@ -1,0 +1,16 @@
+{
+  "name": "library-project",
+  "version": "1.0.0",
+  "description": "Simple API to represent a community library. Deployed on Google App Engine and uses node.js and Google Cloud Datastore",
+  "main": "server.js",
+  "dependencies": {
+    "@google-cloud/datastore": "^7.0.0",
+    "express": "^4.18.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
