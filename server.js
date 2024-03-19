@@ -120,7 +120,7 @@ function patch_book(id, title, author, pub_date, owner, borrower) {
 }
 
 // Assign book to member's owned_books
-function put_book(req, member_id, name, email, address, owned_books, borrowed_books, book_id, title) {
+function own_book(req, member_id, name, email, address, owned_books, borrowed_books, book_id, title) {
     const key = datastore.key([MEMBER, parseInt(member_id, 10)]);
     const new_book = {
         "title": title,
@@ -136,6 +136,31 @@ function put_owner_book(req, book_id, title, author, pub_date, borrower, member_
     const key = datastore.key([BOOK, parseInt(book_id, 10)]);
 
     const owner = {
+        "name": name,
+        "self": req.protocol + "://" + req.get("host") + "/members/" + member_id
+    }
+
+    const book = { "title": title, "author": author, "pub_date": pub_date, "owner": owner, "borrower": borrower };
+    return datastore.save({ "key": key, "data": book });
+}
+
+// Assign book to member's borrowed_books
+function borrow_book(req, member_id, name, email, address, owned_books, borrowed_books, book_id, title) {
+    const key = datastore.key([MEMBER, parseInt(member_id, 10)]);
+    const borrow_book = {
+        "title": title,
+        "self": req.protocol + "://" + req.get("host") + "/books/" + book_id
+    }
+    borrowed_books.push(borrow_book)
+    const member = { "name": name, "email": email, "address": address, "owned_books": owned_books, "borrowed_books": borrowed_books };
+    return datastore.save({ "key": key, "data": member });
+}
+
+// Assign borrower attribute of book
+function put_borrower_book(req, book_id, title, author, pub_date, owner, member_id, name) {
+    const key = datastore.key([BOOK, parseInt(book_id, 10)]);
+
+    const borrower = {
         "name": name,
         "self": req.protocol + "://" + req.get("host") + "/members/" + member_id
     }
@@ -402,7 +427,7 @@ routerMembers.put('/:member_id/books/:book_id', function (req, res) {
                                 res.status(403).json({ 'Error': 'The book is already owned by another member' });
                                 return
                             } else {
-                                put_book(req, req.params.member_id, member[0].name, member[0].email, member[0].address, member[0].owned_books, member[0].borrowed_books, req.params.book_id, book[0].title)
+                                own_book(req, req.params.member_id, member[0].name, member[0].email, member[0].address, member[0].owned_books, member[0].borrowed_books, req.params.book_id, book[0].title)
                                 put_owner_book(req, req.params.book_id, book[0].title, book[0].author, book[0].pub_date, book[0].borrower, req.params.member_id, member[0].name)
                                     .then(res.status(200).json({
                                         'id': req.params.book_id,
@@ -417,6 +442,46 @@ routerMembers.put('/:member_id/books/:book_id', function (req, res) {
             }
         });
 });
+
+// Borrow a book
+routerBooks.put('/:book_id/members/:member_id', function (req, res) {
+    get_book(req.params.book_id)
+        .then(book => {
+            if (book[0] === undefined || book[0] === null) {
+                res.status(404).json({ 'Error': 'No member/book with this id exists' });
+                return
+            } else {
+                get_member(req.params.member_id)
+                    .then(member => {
+                        if (member[0] === undefined || member[0] === null) {
+                            res.status(404).json({ 'Error': 'No member/book with this id exists' });
+                            return
+                        } else {
+                            if (book[0].borrower !== null) {
+                                if (book[0].borrower.name == member[0].name) {
+                                    res.status(403).json({ 'Error': 'You are already borrowing this book' });
+                                    return
+                                } else {
+                                    res.status(403).json({ 'Error': 'The book is being borrowed by another member' });
+                                    return
+                                }
+                            } else {
+                                borrow_book(req, req.params.member_id, member[0].name, member[0].email, member[0].address, member[0].owned_books, member[0].borrowed_books, req.params.book_id, book[0].title)
+                                put_borrower_book(req, req.params.book_id, book[0].title, book[0].author, book[0].pub_date, book[0].owner, req.params.member_id, member[0].name)
+                                    .then(res.status(200).json({
+                                        'id': req.params.book_id,
+                                        'title': book[0].title,
+                                        'author': book[0].author,
+                                        'borrower': member[0].name,
+                                        'self': req.protocol + "://" + req.get("host") + "/books/" + req.params.book_id
+                                    }));
+                            }
+                        }
+                    });
+            }
+        });
+});
+
 
 /* ------------- End Controller Functions ------------- */
 
