@@ -119,6 +119,31 @@ function patch_book(id, title, author, pub_date, owner, borrower) {
     return datastore.save({ "key": key, "data": book });
 }
 
+// Assign book to member's owned_books
+function put_book(req, member_id, name, email, address, owned_books, borrowed_books, book_id, title) {
+    const key = datastore.key([MEMBER, parseInt(member_id, 10)]);
+    const new_book = {
+        "title": title,
+        "self": req.protocol + "://" + req.get("host") + "/books/" + book_id
+    }
+    owned_books.push(new_book)
+    const member = { "name": name, "email": email, "address": address, "owned_books": owned_books, "borrowed_books": borrowed_books };
+    return datastore.save({ "key": key, "data": member });
+}
+
+// Assign owner attribute of book
+function put_owner_book(req, book_id, title, author, pub_date, borrower, member_id, name) {
+    const key = datastore.key([BOOK, parseInt(book_id, 10)]);
+
+    const owner = {
+        "name": name,
+        "self": req.protocol + "://" + req.get("host") + "/members/" + member_id
+    }
+
+    const book = { "title": title, "author": author, "pub_date": pub_date, "owner": owner, "borrower": borrower };
+    return datastore.save({ "key": key, "data": book });
+}
+
 /* ------------- End Model Functions ------------- */
 
 /* ------------- Begin Controller Functions ------------- */
@@ -357,6 +382,40 @@ routerBooks.patch('/:id', function (req, res) {
                 }))
             }
         })
+});
+
+// Assign owner to a book
+routerMembers.put('/:member_id/books/:book_id', function (req, res) {
+    get_member(req.params.member_id)
+        .then(member => {
+            if (member[0] === undefined || member[0] === null) {
+                res.status(404).json({ 'Error': 'No member/book with this id exists' });
+                return
+            } else {
+                get_book(req.params.book_id)
+                    .then(book => {
+                        if (book[0] === undefined || book[0] === null) {
+                            res.status(404).json({ 'Error': 'No member/book with this id exists' });
+                            return
+                        } else {
+                            if (book[0].owner !== null) {
+                                res.status(403).json({ 'Error': 'The book is already owned by another member' });
+                                return
+                            } else {
+                                put_book(req, req.params.member_id, member[0].name, member[0].email, member[0].address, member[0].owned_books, member[0].borrowed_books, req.params.book_id, book[0].title)
+                                put_owner_book(req, req.params.book_id, book[0].title, book[0].author, book[0].pub_date, book[0].borrower, req.params.member_id, member[0].name)
+                                    .then(res.status(200).json({
+                                        'id': req.params.book_id,
+                                        'title': book[0].title,
+                                        'author': book[0].author,
+                                        'owner': member[0].name,
+                                        'self': req.protocol + "://" + req.get("host") + "/books/" + req.params.book_id
+                                    }));
+                            }
+                        }
+                    });
+            }
+        });
 });
 
 /* ------------- End Controller Functions ------------- */
