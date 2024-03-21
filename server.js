@@ -123,6 +123,7 @@ function patch_book(id, title, author, pub_date, owner, borrower) {
 function own_book(req, member_id, name, email, address, owned_books, borrowed_books, book_id, title) {
     const key = datastore.key([MEMBER, parseInt(member_id, 10)]);
     const new_book = {
+        "id": book_id,
         "title": title,
         "self": req.protocol + "://" + req.get("host") + "/books/" + book_id
     }
@@ -136,6 +137,7 @@ function put_owner_book(req, book_id, title, author, pub_date, borrower, member_
     const key = datastore.key([BOOK, parseInt(book_id, 10)]);
 
     const owner = {
+        "id": member_id,
         "name": name,
         "self": req.protocol + "://" + req.get("host") + "/members/" + member_id
     }
@@ -148,6 +150,7 @@ function put_owner_book(req, book_id, title, author, pub_date, borrower, member_
 function borrow_book(req, member_id, name, email, address, owned_books, borrowed_books, book_id, title) {
     const key = datastore.key([MEMBER, parseInt(member_id, 10)]);
     const borrow_book = {
+        "id": book_id,
         "title": title,
         "self": req.protocol + "://" + req.get("host") + "/books/" + book_id
     }
@@ -161,12 +164,50 @@ function put_borrower_book(req, book_id, title, author, pub_date, owner, member_
     const key = datastore.key([BOOK, parseInt(book_id, 10)]);
 
     const borrower = {
+        "id": member_id,
         "name": name,
         "self": req.protocol + "://" + req.get("host") + "/members/" + member_id
     }
 
     const book = { "title": title, "author": author, "pub_date": pub_date, "owner": owner, "borrower": borrower };
     return datastore.save({ "key": key, "data": book });
+}
+
+// Remove book from member's borrowed list
+function remove_book(member_id, name, email, address, owned_books, borrowed_books, book_id) {
+    const key = datastore.key([MEMBER, parseInt(member_id, 10)]);
+    for ( var i = 0; i < borrowed_books.length; i++ ) {
+        if ( borrowed_books[i].id == book_id ) {
+            borrowed_books.splice(i, 1);
+        }
+    }
+    const member = { "name": name, "email": email, "address": address, "owned_books": owned_books, "borrowed_books": borrowed_books };
+    return datastore.save({ "key": key, "data": member });
+}
+
+// Unassign member as borrower for book
+function remove_borrower(book_id, title, author, pub_date, owner) {
+    const key = datastore.key([BOOK, parseInt(book_id, 10)]);
+    const book = { "title": title, "author": author, "pub_date": pub_date, "owner": owner, "borrower": null };
+    return datastore.save({ "key": key, "data": book });
+}
+
+// Delete a load
+function delete_book(id) {
+    const key = datastore.key([BOOK, parseInt(id, 10)]);
+    return datastore.delete(key);
+}
+
+// Remove book from member's owned list
+function remove_owned_book(member_id, name, email, address, owned_books, borrowed_books, book_id) {
+    const key = datastore.key([MEMBER, parseInt(member_id, 10)]);
+    for ( var i = 0; i < owned_books.length; i++ ) {
+        if ( owned_books[i].id == book_id ) {
+            owned_books.splice(i, 1);
+        }
+    }
+    const member = { "name": name, "email": email, "address": address, "owned_books": owned_books, "borrowed_books": borrowed_books };
+    return datastore.save({ "key": key, "data": member });
 }
 
 /* ------------- End Model Functions ------------- */
@@ -482,6 +523,56 @@ routerBooks.put('/:book_id/members/:member_id', function (req, res) {
         });
 });
 
+// Return a book
+routerMembers.delete('/:member_id/books/:book_id', function (req, res) {
+    get_member(req.params.member_id)
+    .then(member => {
+        if (member[0] === undefined || member[0] === null) {
+            res.status(404).json({ 'Error': 'No member/book with this id exists' });
+            return
+        } else {
+            get_book(req.params.book_id)
+                .then(book => {
+                    if (book[0] === undefined || book[0] === null) {
+                        res.status(404).json({ 'Error': 'No member/book with this id exists' });
+                        return
+                    } else if (book[0].borrower == null || book[0].borrower.name !== member[0].name) {
+                        res.status(403).json({ 'Error': 'Book is not currently borrowed by you'})
+                    } else {
+                        remove_book(req.params.member_id, member[0].name, member[0].email, member[0].address, member[0].owned_books, member[0].borrowed_books, req.params.book_id)
+                        remove_borrower(req.params.book_id, book[0].title, book[0].author, book[0].pub_date, book[0].owner)
+                            .then(res.status(204).end())
+                    }
+                });
+        }
+    });
+});
+
+// Delete a load
+routerBooks.delete('/:id', function (req, res) {
+    get_book(req.params.id)
+        .then(book => {
+            if (book[0] === undefined || book[0] === null) {
+                res.status(404).json({ 'Error': 'No book with this id exists' });
+                return
+            }
+            else if (book[0].borrower !== null) {
+                res.status(403).json({ 'Error': 'Cannot delete book that is currently being borrowed'});
+                return
+            } else {
+                if (book[0].owner === null) {
+                    delete_book(req.params.id).then(res.status(204).end())
+                } else {
+                    const member_id = book[0].owner.id
+                    get_member(member_id)
+                        .then(member => {
+                            remove_owned_book(member_id, member[0].name, member[0].email, member[0].address, member[0].owned_books, member[0].borrowed_books, req.params.id)
+                            delete_book(req.params.id).then(res.status(204).end())
+                        })
+                }
+            }
+        });
+});
 
 /* ------------- End Controller Functions ------------- */
 
