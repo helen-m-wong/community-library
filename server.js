@@ -589,32 +589,12 @@ routerMembers.delete('/:id', function (req, res) {
                 return
             } 
             else if (member[0].borrowed_books.length == 0 && member[0].owned_books.length == 0) {
-                console.log("no borrowed or owned books, delete works");
                 delete_member(req.params.id).then(res.status(204).end())
             }
-            else if (member[0].borrowed_books.length > 0) {
-                res.status(403).json({ 'Error': 'Cannot delete member if they are currently borrowing any books' });
+            else {
+                res.status(403).json({ 'Error': "Please return member's borrowed books and delete their owned books from the system first" });
                 return
             }
-            else if (member[0].owned_books.length > 0) {
-                //var borrowerCheck = false
-                for (var i = 0; i < member[0].owned_books.length; i++ ) {
-                    get_book(member[0].owned_books[i].id)
-                        .then(book => {
-                            console.log(book[0].title);
-                            if (book[0].borrower == null) {
-                                delete_book(book[0].id).then(res.status(204).end())
-                            }
-                            else if (book[0].borrower !== null) {
-                                //borrowerCheck = true
-                                res.status(403).json({ 'Error': 'Cannot delete member if any of their books are currently being borrowed' });
-                                return
-                            }
-                        }
-                    )
-                }
-            }
-            delete_member(req.params.id).then(res.status(204).end())
         });
 });
 
