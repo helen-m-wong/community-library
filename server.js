@@ -192,7 +192,7 @@ function remove_borrower(book_id, title, author, pub_date, owner) {
     return datastore.save({ "key": key, "data": book });
 }
 
-// Delete a load
+// Delete a book
 function delete_book(id) {
     const key = datastore.key([BOOK, parseInt(id, 10)]);
     return datastore.delete(key);
@@ -208,6 +208,12 @@ function remove_owned_book(member_id, name, email, address, owned_books, borrowe
     }
     const member = { "name": name, "email": email, "address": address, "owned_books": owned_books, "borrowed_books": borrowed_books };
     return datastore.save({ "key": key, "data": member });
+}
+
+// Delete a member
+function delete_member(id) {
+    const key = datastore.key([MEMBER, parseInt(id, 10)]);
+    return datastore.delete(key);
 }
 
 /* ------------- End Model Functions ------------- */
@@ -548,7 +554,7 @@ routerMembers.delete('/:member_id/books/:book_id', function (req, res) {
     });
 });
 
-// Delete a load
+// Delete a book
 routerBooks.delete('/:id', function (req, res) {
     get_book(req.params.id)
         .then(book => {
@@ -571,6 +577,44 @@ routerBooks.delete('/:id', function (req, res) {
                         })
                 }
             }
+        });
+});
+
+// Delete a member
+routerMembers.delete('/:id', function (req, res) {
+    get_member(req.params.id)
+        .then(member => {
+            if (member[0] === undefined || member[0] === null) {
+                res.status(404).json({ 'Error': 'No member with this id exists' });
+                return
+            } 
+            else if (member[0].borrowed_books.length == 0 && member[0].owned_books.length == 0) {
+                console.log("no borrowed or owned books, delete works");
+                delete_member(req.params.id).then(res.status(204).end())
+            }
+            else if (member[0].borrowed_books.length > 0) {
+                res.status(403).json({ 'Error': 'Cannot delete member if they are currently borrowing any books' });
+                return
+            }
+            else if (member[0].owned_books.length > 0) {
+                //var borrowerCheck = false
+                for (var i = 0; i < member[0].owned_books.length; i++ ) {
+                    get_book(member[0].owned_books[i].id)
+                        .then(book => {
+                            console.log(book[0].title);
+                            if (book[0].borrower == null) {
+                                delete_book(book[0].id).then(res.status(204).end())
+                            }
+                            else if (book[0].borrower !== null) {
+                                //borrowerCheck = true
+                                res.status(403).json({ 'Error': 'Cannot delete member if any of their books are currently being borrowed' });
+                                return
+                            }
+                        }
+                    )
+                }
+            }
+            delete_member(req.params.id).then(res.status(204).end())
         });
 });
 
