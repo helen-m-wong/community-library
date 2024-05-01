@@ -1,10 +1,23 @@
+import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 import './App.css';
+
+import Members from './pages/Members.js';
 
 function App() {
   return (
-    <div className="App">
-      <h1>Hello World!</h1>
-    </div>
+    <>
+      <BrowserRouter>
+        <main>
+          <section>
+            <Routes>
+              <Route path="/members" element={<Members />} />
+            </Routes>
+          </section>
+        </main>
+      </BrowserRouter>
+    </>
   );
 }
 

@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
 
 const { Datastore } = require('@google-cloud/datastore');
@@ -11,6 +12,7 @@ const BOOK = "Books";
 const routerMembers = express.Router();
 const routerBooks = express.Router();
 
+app.use(cors());
 app.use(bodyParser.json());
 app.enable('trust proxy');
 
@@ -603,7 +605,7 @@ routerMembers.delete('/:id', function (req, res) {
 app.use('/members', routerMembers);
 app.use('/books', routerBooks);
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}...`);
 });
