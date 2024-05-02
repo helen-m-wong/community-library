@@ -16,10 +16,8 @@ function Members() {
                 } else {
                     console.log("There was an error retrieving the data")
                 }
-                
-
             } catch (error) {
-                console.log(error)
+                console.log(error);
             }
         };
         getMembers();
@@ -28,6 +26,7 @@ function Members() {
     return (
         <>
             <h2>Members</h2>
+            <Link to="/members/add">Add Member</Link>
             <table>
                 <thead>
                     <tr>
