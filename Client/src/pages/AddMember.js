@@ -13,7 +13,7 @@ function AddMember() {
 
         try {
             const response = await fetch('/members', {
-                method: 'post',
+                method: 'POST',
                 body: JSON.stringify(newMember),
                 headers: {
                     'Content-Type': 'application/json',
@@ -37,26 +37,23 @@ function AddMember() {
             <h2>Add a Member</h2>
             <form onSubmit={(e) => { e.preventDefault();}}>
                 <fieldset>
-                    <label for="name" class="required">Name</label>
+                    <label for="name" className="required">Name</label>
                     <input
                         type="text"
-                        placeholder="Name"
                         value={name}
                         onChange={e => setName(e.target.value)} 
                         id="name" />
                     
-                    <label for="email" class="required">Email</label>
+                    <label for="email" className="required">Email</label>
                     <input
                         type="text"
                         value={email}
-                        placeholder="Email"
                         onChange={e => setEmail(e.target.value)} 
                         id="email" />
 
-                    <label for="address" class="required">Address</label>
+                    <label for="address" className="required">Address</label>
                     <input
                         type="text"
-                        placeholder="Address"
                         value={address}
                         onChange={e => setAddress(e.target.value)} 
                         id="address" />

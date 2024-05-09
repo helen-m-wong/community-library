@@ -11,7 +11,7 @@ function Members() {
                 const res = await fetch('/members');
                 const data = await res.json();
                 if (res.status === 200) {
-                    console.log("members data retrieved");
+                    console.log("Members data retrieved");
                     setMembers(data.members);
                 } else {
                     console.log("There was an error retrieving the data")
