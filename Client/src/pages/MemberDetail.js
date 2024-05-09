@@ -1,5 +1,5 @@
 import React, { useState, useEffect }  from 'react';
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 function MemberDetail() {
 
@@ -43,6 +43,8 @@ function MemberDetail() {
                 if (response.status === 204) {
                     console.log("Member deleted successfully")
                     navigate("/members");
+                } else if (response.status === 403) {
+                    window.alert("Please return member's borrowed books and delete their owned books from the system first");
                 } else {
                     console.log("Error deleting member");
                 }
