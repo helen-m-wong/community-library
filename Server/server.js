@@ -122,11 +122,12 @@ function patch_book(id, title, author, pub_date, owner, borrower) {
 }
 
 // Assign book to member's owned_books
-function own_book(req, member_id, name, email, address, owned_books, borrowed_books, book_id, title) {
+function own_book(req, member_id, name, email, address, owned_books, borrowed_books, book_id, title, author) {
     const key = datastore.key([MEMBER, parseInt(member_id, 10)]);
     const new_book = {
         "id": book_id,
         "title": title,
+        "author": author,
         "self": req.protocol + "://" + req.get("host") + "/books/" + book_id
     }
     owned_books.push(new_book)
@@ -149,11 +150,12 @@ function put_owner_book(req, book_id, title, author, pub_date, borrower, member_
 }
 
 // Assign book to member's borrowed_books
-function borrow_book(req, member_id, name, email, address, owned_books, borrowed_books, book_id, title) {
+function borrow_book(req, member_id, name, email, address, owned_books, borrowed_books, book_id, title, author) {
     const key = datastore.key([MEMBER, parseInt(member_id, 10)]);
     const borrow_book = {
         "id": book_id,
         "title": title,
+        "author": author,
         "self": req.protocol + "://" + req.get("host") + "/books/" + book_id
     }
     borrowed_books.push(borrow_book)
@@ -476,7 +478,7 @@ routerMembers.put('/:member_id/books/:book_id', function (req, res) {
                                 res.status(403).json({ 'Error': 'The book is already owned by another member' });
                                 return
                             } else {
-                                own_book(req, req.params.member_id, member[0].name, member[0].email, member[0].address, member[0].owned_books, member[0].borrowed_books, req.params.book_id, book[0].title)
+                                own_book(req, req.params.member_id, member[0].name, member[0].email, member[0].address, member[0].owned_books, member[0].borrowed_books, req.params.book_id, book[0].title, book[0].author)
                                 put_owner_book(req, req.params.book_id, book[0].title, book[0].author, book[0].pub_date, book[0].borrower, req.params.member_id, member[0].name)
                                     .then(res.status(200).json({
                                         'id': req.params.book_id,
@@ -515,7 +517,7 @@ routerBooks.put('/:book_id/members/:member_id', function (req, res) {
                                     return
                                 }
                             } else {
-                                borrow_book(req, req.params.member_id, member[0].name, member[0].email, member[0].address, member[0].owned_books, member[0].borrowed_books, req.params.book_id, book[0].title)
+                                borrow_book(req, req.params.member_id, member[0].name, member[0].email, member[0].address, member[0].owned_books, member[0].borrowed_books, req.params.book_id, book[0].title, book[0].author)
                                 put_borrower_book(req, req.params.book_id, book[0].title, book[0].author, book[0].pub_date, book[0].owner, req.params.member_id, member[0].name)
                                     .then(res.status(200).json({
                                         'id': req.params.book_id,
