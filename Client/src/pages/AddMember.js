@@ -31,42 +31,45 @@ function AddMember() {
         }
     }
 
+    const navToMembers = () => {
+        navigate('/members');
+    };
+
     return (
         <>
         <article>
             <h2>Add a Member</h2>
             <form onSubmit={(e) => { e.preventDefault();}}>
                 <fieldset>
-                    <label for="name" className="required">Name</label>
+                    <label htmlFor="name" className="required">Name</label>
                     <input
                         type="text"
                         value={name}
                         onChange={e => setName(e.target.value)} 
                         id="name" />
                     
-                    <label for="email" className="required">Email</label>
+                    <label htmlFor="email" className="required">Email</label>
                     <input
                         type="text"
                         value={email}
                         onChange={e => setEmail(e.target.value)} 
                         id="email" />
 
-                    <label for="address" className="required">Address</label>
+                    <label htmlFor="address" className="required">Address</label>
                     <input
                         type="text"
                         value={address}
                         onChange={e => setAddress(e.target.value)} 
                         id="address" />
 
-                    <label for="submit">
-                    <button
-                        type="submit"
-                        onClick={addMember}
-                        id="submit"
-                    >Add</button> to the collection</label>
+                    <button type="submit" onClick={addMember} id="submit">
+                        Add
+                    </button>
                 </fieldset>
                 </form>
             </article>
+            <button onClick={navToMembers}>Back to Members</button>
+
         </>
     );
   }

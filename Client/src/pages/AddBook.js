@@ -31,42 +31,44 @@ function AddBook() {
         }
     }
 
+    const navToBooks = () => {
+        navigate('/books');
+    };
+
     return (
         <>
         <article>
             <h2>Add a Book</h2>
             <form onSubmit={(e) => { e.preventDefault();}}>
                 <fieldset>
-                    <label for="title" className="required">Title</label>
+                    <label htmlFor="title" className="required">Title</label>
                     <input
                         type="text"
                         value={title}
                         onChange={e => setTitle(e.target.value)} 
                         id="title" />
                     
-                    <label for="author" className="required">Author</label>
+                    <label htmlFor="author" className="required">Author</label>
                     <input
                         type="text"
                         value={author}
                         onChange={e => setAuthor(e.target.value)} 
                         id="author" />
 
-                    <label for="pub_date" className="required">Publication Date</label>
+                    <label htmlFor="pub_date" className="required">Publication Date</label>
                     <input
                         type="text"
                         value={pub_date}
                         onChange={e => setPubDate(e.target.value)} 
                         id="pub_date" />
 
-                    <label for="submit">
-                    <button
-                        type="submit"
-                        onClick={addBook}
-                        id="submit"
-                    >Add</button> to the collection</label>
+                    <button type="submit" onClick={addBook} id="submit">
+                        Add
+                    </button>
                 </fieldset>
                 </form>
             </article>
+            <button onClick={navToBooks}>Back to Books</button>
         </>
     );
   }
