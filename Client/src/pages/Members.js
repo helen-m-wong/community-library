@@ -14,7 +14,7 @@ function Members() {
                     console.log("Members data retrieved");
                     setMembers(data.members);
                 } else {
-                    console.log("There was an error retrieving the data")
+                    console.log("There was an error retrieving the data");
                 }
             } catch (error) {
                 console.log(error);
