@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from 'react';
+import React, { useState }  from 'react';
 import { useNavigate } from "react-router-dom";
 import OwnerSelection from '../components/SelectOwner';
 
@@ -9,7 +9,6 @@ function AddBook() {
     const [pub_date, setPubDate] = useState('');
     const [bookAdded, setBookAdded] = useState(false);
     const [bookId, setBookId] = useState(null);
-    const [ownerSelected, setOwnerSelected] = useState(false);
     const navigate = useNavigate();
 
     const addBook = async () => {
@@ -28,6 +27,7 @@ function AddBook() {
                 setBookAdded(true); 
                 const data = await response.json();
                 setBookId(data.id);
+                window.alert("Please assign an owner to the book—this can't be changed later");
             } else {
                 console.log("Error adding book")
                 navigate("/books");
@@ -37,23 +37,26 @@ function AddBook() {
         }
     };
 
-    const handleOwnerSelection = async (selectedOwner) => {
-        try {
-            const response = await fetch(`/members/${selectedOwner}/books/${bookId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
+    const handleOwnerSelection = async (ownerID, ownerName) => {
+        const confirmSelection = window.confirm(`Are you sure you want to assign this book to ${ownerName}?`);
+        if (confirmSelection) {
+            try {
+                const response = await fetch(`/members/${ownerID}/books/${bookId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+        
+                if (response.status === 200) {
+                    console.log('Owner assigned successfully');
+                    navigate("/books");
+                } else {
+                    console.log('Error assigning owner');
                 }
-            });
-    
-            if (response.status === 200) {
-                console.log('Owner assigned successfully');
-                navigate("/books");
-            } else {
-                console.log('Error assigning owner');
+            } catch (error) {
+                console.log(error);
             }
-        } catch (error) {
-            console.log(error);
         }
     };
     

@@ -72,7 +72,7 @@ function patch_member(id, name, email, address, owned_books, borrowed_books) {
 
 // Get all books
 async function get_books(req) {
-    var q = datastore.createQuery(BOOK).limit(5);
+    var q = datastore.createQuery(BOOK).limit(10);
     var count_q = datastore.createQuery(BOOK);
     var results = {};
     

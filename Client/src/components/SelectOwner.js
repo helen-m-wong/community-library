@@ -29,7 +29,10 @@ function OwnerSelection({ onSelectOwner }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (selectedOwner) {
-            onSelectOwner(selectedOwner);
+            const selectedMember = members.find(member => member.id === selectedOwner);
+            if (selectedMember) {
+                onSelectOwner(selectedMember.id, selectedMember.name);
+            }
         }
     }
 
