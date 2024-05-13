@@ -71,6 +71,27 @@ function patch_member(id, name, email, address, owned_books, borrowed_books) {
 }
 
 // Get all books
+async function get_all_books(req) {
+    var count_q = datastore.createQuery(BOOK);
+    var q = datastore.createQuery(BOOK);
+    var results = {};
+
+    await datastore.runQuery(count_q).then ( (books) => {
+        results.count = books[0].map(fromDatastore).length;
+    });
+
+    return datastore.runQuery(q).then((entities) => {
+        results.books = entities[0].map(fromDatastore);
+
+        for (book of results.books) {
+            book.self = req.protocol + "://" + req.get("host") + "/books/" + book.id
+        }
+
+        return results;
+    });
+}
+
+// Get all books paginated
 async function get_books(req) {
     var q = datastore.createQuery(BOOK).limit(10);
     var count_q = datastore.createQuery(BOOK);
@@ -343,6 +364,14 @@ routerMembers.patch('/:id', function (req, res) {
 });
 
 // Get all books
+routerBooks.get('/all', function (req, res) {
+    const books = get_all_books(req)
+        .then((books) => {
+        res.status(200).json(books);
+    });
+});
+
+// Get all books paginated
 routerBooks.get('/', function (req, res) {
     const books = get_books(req)
         .then((books) => {

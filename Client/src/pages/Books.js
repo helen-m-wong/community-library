@@ -1,12 +1,13 @@
 import React, { useState, useEffect }  from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Books() {
 
     const [books, setBooks] = useState([]);
-    const [searchTitle, setSearchTitle] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
+    const [allBooks, setAllBooks] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
     const [nextLink, setNextLink] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const getBooks = async() => {
@@ -27,6 +28,24 @@ function Books() {
         getBooks();
     }, []);
 
+    useEffect(() => {
+        const getAllBooks = async() => {
+            try {
+                const res = await fetch('/books/all');
+                const data = await res.json();
+                if (res.status === 200) {
+                    console.log("All books data retrieved");
+                    setAllBooks(data.books);
+                } else {
+                    console.log("There was an error retrieving the data")
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getAllBooks();
+    }, []);
+
     const getNextBooks = async () => {
         try {
             const res = await fetch(nextLink);
@@ -42,15 +61,18 @@ function Books() {
         }
     };
 
-    const handleSearchTitleChange = (event) => {
-        setSearchTitle(event.target.value);
+    const handleSearchQueryChange = (event) => {
+        setSearchQuery(event.target.value);
     };
 
     const handleSearch = () => {
-        const filteredBooks = books.filter((book) =>
-            book.title.toLowerCase().includes(searchTitle.toLowerCase())
+        const filteredBooks = allBooks.filter((book) =>
+            book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            book.author.toLowerCase().includes(searchQuery.toLowerCase())
         );
-        setSearchResults(filteredBooks);
+        console.log(filteredBooks);
+        console.log(filteredBooks.length);
+        navigate('/books/search', { state: { searchResults: filteredBooks } });
     };
 
     return (
@@ -61,18 +83,11 @@ function Books() {
 
             <input 
                 type="text"
-                placeholder="Search by title"
-                value={searchTitle}
-                onChange={handleSearchTitleChange}
+                placeholder="Search by title or author"
+                value={searchQuery}
+                onChange={handleSearchQueryChange}
             />
             <button onClick={handleSearch}>Search</button>
-            <ul>
-                {searchResults.map((book) => (
-                    <li key={book.id}>
-                        {book.title} by {book.author}
-                    </li>
-                ))}
-            </ul>
 
 
             <table>
