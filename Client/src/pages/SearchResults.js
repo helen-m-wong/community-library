@@ -36,7 +36,7 @@ function SearchResults() {
                 </tbody>
             </table>
             ) : (
-                <p>No results found</p>
+                <p>No results matching your query were found</p>
             )}
             <button onClick={navToBooks}>Back to Books</button>
         </>

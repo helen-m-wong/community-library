@@ -37,11 +37,11 @@ function AddBook() {
         }
     };
 
-    const handleOwnerSelection = async (ownerID, ownerName) => {
+    const handleOwnerSelection = async (ownerId, ownerName) => {
         const confirmSelection = window.confirm(`Are you sure you want to assign this book to ${ownerName}?`);
         if (confirmSelection) {
             try {
-                const response = await fetch(`/members/${ownerID}/books/${bookId}`, {
+                const response = await fetch(`/members/${ownerId}/books/${bookId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'

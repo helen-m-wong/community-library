@@ -1,5 +1,5 @@
 import React, { useState, useEffect }  from 'react';
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 
 function MemberDetail() {
 
@@ -86,7 +86,9 @@ function MemberDetail() {
                 <tbody>
                     {member.owned_books.map((book) => (
                         <tr key={book.id}>
-                            <td>{book.title}</td>
+                            <td>
+                                <Link to={`/books/${book.id}`}>{book.title}</Link>
+                            </td>
                             <td>{book.author}</td>
                         </tr>
                     ))}
@@ -103,7 +105,9 @@ function MemberDetail() {
                 <tbody>
                     {member.borrowed_books.map((book) => (
                         <tr key={book.id}>
-                            <td>{book.title}</td>
+                            <td>
+                                <Link to={`/books/${book.id}`}>{book.title}</Link>
+                            </td>
                             <td>{book.author}</td>
                         </tr>
                     ))}
