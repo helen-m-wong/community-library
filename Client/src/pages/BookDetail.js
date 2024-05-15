@@ -78,7 +78,13 @@ function BookDetail() {
     
             if (response.status === 200) {
                 console.log('Book borrowed successfully');
-                setBook(prevBook => ({ ...prevBook, borrower: { name: `${borrowerName}` } }));
+                setBook(prevBook => ({ ...prevBook,
+                    borrower: {
+                        name: `${borrowerName}`,
+                        id: `${borrowerId}`
+                        }
+                    }));
+                console.log(book);
                 window.alert("Book borrowed successfully!");
             } else if (response.status === 403) {
                 if (book.borrower.name === borrowerName) {
