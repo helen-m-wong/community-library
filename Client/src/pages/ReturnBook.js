@@ -71,7 +71,7 @@ function ReturnBook() {
 
     return (
         <div>
-            <h2>Return Book</h2>
+            <h2>Return a Book</h2>
 
                 <>
                     <p>Who's returning the book?</p>

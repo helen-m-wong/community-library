@@ -84,7 +84,6 @@ function BookDetail() {
                         id: `${borrowerId}`
                         }
                     }));
-                console.log(book);
                 window.alert("Book borrowed successfully!");
             } else if (response.status === 403) {
                 if (book.borrower.name === borrowerName) {
@@ -100,6 +99,10 @@ function BookDetail() {
         } 
     };
 
+    const handleViewAllBooks = () => {
+        navigate('/books');
+    };
+
     if (!book) {
         return <div>Loading...</div>;
     }
@@ -107,6 +110,7 @@ function BookDetail() {
     return (
         <>
             <h2>Book Details</h2>
+            <button onClick={handleViewAllBooks}>View all Books</button>
             <button onClick={handleEditBook}>Edit Book</button>
             <button onClick={deleteBook}>Delete Book</button>
             <button onClick={handleBorrowBook}>Borrow Book</button>
