@@ -1,16 +1,17 @@
-const express = require('express');
-const cors = require('cors');
-const app = express();
+require('dotenv').config();
 
+const express = require('express');
+const app = express();
 const { Datastore } = require('@google-cloud/datastore');
+const datastore = new Datastore();
 const bodyParser = require('body-parser');
 
-const datastore = new Datastore();
-
+const GOOGLE_BOOKS_API_KEY = process.env.GOOGLE_BOOKS_API_KEY;
 const MEMBER = "Members";
 const BOOK = "Books";
 const routerMembers = express.Router();
 const routerBooks = express.Router();
+const cors = require('cors');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -629,6 +630,23 @@ routerMembers.delete('/:id', function (req, res) {
                 return
             }
         });
+});
+
+// Search books by title or author using Google Books API
+app.get('/api/search-books', async (req, res) => {
+    const { query } = req.query;
+    const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}&key=${GOOGLE_BOOKS_API_KEY}&maxResults=20`;
+    if (!query) {
+        return res.status(400).json({ 'Error': 'Query parameter is required' });
+    }
+    try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        console.log(data.items)
+        res.json(data.items);
+    } catch (error) {
+        res.status(500).json({ 'Error': 'Failed to fetch books' });
+    }
 });
 
 /* ------------- End Controller Functions ------------- */
