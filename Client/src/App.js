@@ -11,17 +11,18 @@ import EditMember from './pages/EditMember.js';
 import Books from './pages/Books.js';
 import BookDetail from './pages/BookDetail.js';
 import AddBook from './pages/AddBook.js';
-import EditBook from './pages/EditBook.js';
+//import EditBook from './pages/EditBook.js';
 import SearchResults from './pages/SearchResults.js';
 import ReturnBook from './pages/ReturnBook.js';
+import GoogleBooks from './pages/GoogleBook.js';
+import GoogleBookDetail from './pages/GoogleBookDetail.js';
 
 function App() {
+
   return (
     <>
       <BrowserRouter>
-
-        <NavBar />
-
+        <NavBar/>
         <main>
           <section>
             <Routes>
@@ -32,9 +33,10 @@ function App() {
               <Route path="/books" element={<Books />} />
               <Route path="/books/:id" element={<BookDetail />} />
               <Route path="/books/add" element={<AddBook />} />
-              <Route path="/books/:id/edit" element={<EditBook />} />
               <Route path="/books/search" element={<SearchResults />} />
               <Route path="/return-book" element={<ReturnBook />} />
+              <Route path="/search-book" element={<GoogleBooks />} />
+              <Route path="/google-book/:id" element={<GoogleBookDetail />} />
 
             </Routes>
           </section>

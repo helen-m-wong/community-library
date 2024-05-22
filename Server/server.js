@@ -130,18 +130,36 @@ function get_book(id) {
 }
 
 // Create a book
+/*
 function post_book(title, author, pub_date) {
     var key = datastore.key(BOOK);
     const new_book = { "title": title, "author": author, "pub_date": pub_date, "owner": null, "borrower": null };
     return datastore.save({ "key": key, "data": new_book }).then(() => { return key });
     }
+*/
 
+// Add book to database from Google Books API
+function post_book(cover, title, author, genre, pub_date) {
+    var key = datastore.key(BOOK);
+    const new_book = {
+        "cover": cover,
+        "title": title,
+        "author": author,
+        "genre": genre,
+        "pub_date": pub_date,
+        "owner": null,
+        "borrower": null };
+    return datastore.save({ "key": key, "data": new_book }).then(() => { return key });
+    }
+
+/*
 // Edit a book with PATCH
 function patch_book(id, title, author, pub_date, owner, borrower) {
     const key = datastore.key([BOOK, parseInt(id, 10)]);
     const book = { "title": title, "author": author, "pub_date": pub_date, "owner": owner, "borrower": borrower };
     return datastore.save({ "key": key, "data": book });
 }
+*/
 
 // Assign book to member's owned_books
 function own_book(req, member_id, name, email, address, owned_books, borrowed_books, book_id, title, author) {
@@ -158,7 +176,7 @@ function own_book(req, member_id, name, email, address, owned_books, borrowed_bo
 }
 
 // Assign owner attribute of book
-function put_owner_book(req, book_id, title, author, pub_date, borrower, member_id, name) {
+function put_owner_book(req, book_id, cover, title, author, genre, pub_date, borrower, member_id, name) {
     const key = datastore.key([BOOK, parseInt(book_id, 10)]);
 
     const owner = {
@@ -167,7 +185,15 @@ function put_owner_book(req, book_id, title, author, pub_date, borrower, member_
         "self": req.protocol + "://" + req.get("host") + "/members/" + member_id
     }
 
-    const book = { "title": title, "author": author, "pub_date": pub_date, "owner": owner, "borrower": borrower };
+    const book = {
+        "cover": cover,
+        "title": title,
+        "author": author,
+        "genre": genre,
+        "pub_date": pub_date,
+        "owner": owner,
+        "borrower": borrower
+    };
     return datastore.save({ "key": key, "data": book });
 }
 
@@ -186,7 +212,7 @@ function borrow_book(req, member_id, name, email, address, owned_books, borrowed
 }
 
 // Assign borrower attribute of book
-function put_borrower_book(req, book_id, title, author, pub_date, owner, member_id, name) {
+function put_borrower_book(req, book_id, cover, title, author, genre, pub_date, owner, member_id, name) {
     const key = datastore.key([BOOK, parseInt(book_id, 10)]);
 
     const borrower = {
@@ -195,7 +221,15 @@ function put_borrower_book(req, book_id, title, author, pub_date, owner, member_
         "self": req.protocol + "://" + req.get("host") + "/members/" + member_id
     }
 
-    const book = { "title": title, "author": author, "pub_date": pub_date, "owner": owner, "borrower": borrower };
+    const book = { 
+        "cover": cover,
+        "title": title,
+        "author": author,
+        "genre": genre,
+        "pub_date": pub_date,
+        "owner": owner,
+        "borrower": borrower
+       };
     return datastore.save({ "key": key, "data": book });
 }
 
@@ -212,9 +246,9 @@ function remove_book(member_id, name, email, address, owned_books, borrowed_book
 }
 
 // Unassign member as borrower for book
-function remove_borrower(book_id, title, author, pub_date, owner) {
+function remove_borrower(book_id, cover, title, author, genre, pub_date, owner) {
     const key = datastore.key([BOOK, parseInt(book_id, 10)]);
-    const book = { "title": title, "author": author, "pub_date": pub_date, "owner": owner, "borrower": null };
+    const book = { "cover": cover, "title": title, "author": author, "genre": genre, "pub_date": pub_date, "owner": owner, "borrower": null };
     return datastore.save({ "key": key, "data": book });
 }
 
@@ -389,8 +423,10 @@ routerBooks.get('/:id', function (req, res) {
             } else {
                 res.status(200).json({ 
                     'id': parseInt(book[0].id),
+                    'cover': book[0].cover,
                     'title': book[0].title,
                     'author': book[0].author,
+                    'genre': book[0].genre,
                     'pub_date': book[0].pub_date,
                     'owner': book[0].owner,
                     'borrower': book[0].borrower,
@@ -400,6 +436,7 @@ routerBooks.get('/:id', function (req, res) {
         });
 });
 
+/*
 // Create a book
 routerBooks.post('/', function (req, res) {
     var propCheck = true
@@ -433,7 +470,25 @@ routerBooks.post('/', function (req, res) {
         });
     }
 });
+*/
 
+// Add book to database from Google Books API
+routerBooks.post('/', function (req, res) {
+    const { cover, title, author, genre, pub_date } = req.body;
+    post_book(cover, title, author, genre, pub_date)
+        .then(key => {
+            res.status(201).json({
+                'id': parseInt(key.id),
+                'title': title,
+                'author': author,
+                'genre': genre,
+                'pub_date': pub_date,
+                'self': req.protocol + "://" + req.get("host") + "/books/" + key.id
+            });
+        });
+});
+
+/*
 // Edit a book with PATCH
 routerBooks.patch('/:id', function (req, res) {
     numProp = Object.keys(req.body).length;
@@ -489,6 +544,7 @@ routerBooks.patch('/:id', function (req, res) {
             }
         })
 });
+*/
 
 // Assign owner to a book
 routerMembers.put('/:member_id/books/:book_id', function (req, res) {
@@ -509,7 +565,7 @@ routerMembers.put('/:member_id/books/:book_id', function (req, res) {
                                 return
                             } else {
                                 own_book(req, req.params.member_id, member[0].name, member[0].email, member[0].address, member[0].owned_books, member[0].borrowed_books, req.params.book_id, book[0].title, book[0].author)
-                                put_owner_book(req, req.params.book_id, book[0].title, book[0].author, book[0].pub_date, book[0].borrower, req.params.member_id, member[0].name)
+                                put_owner_book(req, req.params.book_id, book[0].cover, book[0].title, book[0].author, book[0].genre, book[0].pub_date, book[0].borrower, req.params.member_id, member[0].name)
                                     .then(res.status(200).json({
                                         'id': req.params.book_id,
                                         'title': book[0].title,
@@ -548,7 +604,7 @@ routerBooks.put('/:book_id/members/:member_id', function (req, res) {
                                 }
                             } else {
                                 borrow_book(req, req.params.member_id, member[0].name, member[0].email, member[0].address, member[0].owned_books, member[0].borrowed_books, req.params.book_id, book[0].title, book[0].author)
-                                put_borrower_book(req, req.params.book_id, book[0].title, book[0].author, book[0].pub_date, book[0].owner, req.params.member_id, member[0].name)
+                                put_borrower_book(req, req.params.book_id, book[0].cover, book[0].title, book[0].author, book[0].genre, book[0].pub_date, book[0].owner, req.params.member_id, member[0].name)
                                     .then(res.status(200).json({
                                         'id': req.params.book_id,
                                         'title': book[0].title,
@@ -580,7 +636,7 @@ routerMembers.delete('/:member_id/books/:book_id', function (req, res) {
                         res.status(403).json({ 'Error': 'Book is not currently borrowed by you'})
                     } else {
                         remove_book(req.params.member_id, member[0].name, member[0].email, member[0].address, member[0].owned_books, member[0].borrowed_books, req.params.book_id)
-                        remove_borrower(req.params.book_id, book[0].title, book[0].author, book[0].pub_date, book[0].owner)
+                        remove_borrower(req.params.book_id, book[0].cover, book[0].title, book[0].author, book[0].genre, book[0].pub_date, book[0].owner)
                             .then(res.status(204).end())
                     }
                 });
@@ -633,16 +689,15 @@ routerMembers.delete('/:id', function (req, res) {
 });
 
 // Search books by title or author using Google Books API
-app.get('/api/search-books', async (req, res) => {
+app.get('/search-books', async (req, res) => {
     const { query } = req.query;
-    const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}&key=${GOOGLE_BOOKS_API_KEY}&maxResults=20`;
+    const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}&key=${GOOGLE_BOOKS_API_KEY}&maxResults=5`;
     if (!query) {
         return res.status(400).json({ 'Error': 'Query parameter is required' });
     }
     try {
         const response = await fetch(apiUrl);
         const data = await response.json();
-        console.log(data.items)
         res.json(data.items);
     } catch (error) {
         res.status(500).json({ 'Error': 'Failed to fetch books' });

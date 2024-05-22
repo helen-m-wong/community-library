@@ -29,7 +29,7 @@ function AddBook() {
                 setBookId(data.id);
                 window.alert("Please assign an owner to the book—this can't be changed later");
             } else {
-                console.log("Error adding book")
+                console.log("Error adding book");
                 navigate("/books");
             }
         } catch (error) {

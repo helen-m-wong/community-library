@@ -18,6 +18,7 @@ function SearchResults() {
                 <table>
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Title</th>
                         <th>Author</th>
                         <th>Owner</th>
@@ -27,6 +28,11 @@ function SearchResults() {
                 <tbody>
                     {searchResults.map((book) => (
                         <tr key={book.id}>
+                            <td>
+                            {book.cover && (
+                                <img src={book.cover} alt={book.title} />
+                            )}
+                            </td>
                             <td><Link to={`/books/${book.id}`}>{book.title}</Link></td>
                             <td>{book.author}</td>
                             <td>{book.owner ? book.owner.name : 'None'}</td>
@@ -38,7 +44,7 @@ function SearchResults() {
             ) : (
                 <p>No results matching your query were found</p>
             )}
-            <button onClick={navToBooks}>Back to Books</button>
+            <button onClick={navToBooks}>Return to Books</button>
         </>
     );
 }

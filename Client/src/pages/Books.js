@@ -28,6 +28,7 @@ function Books() {
         getBooks();
     }, []);
 
+    // Used to search all books
     useEffect(() => {
         const getAllBooks = async() => {
             try {
@@ -77,8 +78,8 @@ function Books() {
 
     return (
         <>
-            <h2>Books</h2>
-            <Link to="/books/add">Add Book</Link>
+            <h2>Community Library</h2>
+            <Link to="/search-book">Add Book</Link>
 
 
             <input 
@@ -93,6 +94,7 @@ function Books() {
             <table>
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Title</th>
                         <th>Author</th>
                         <th>Owner</th>
@@ -102,6 +104,11 @@ function Books() {
                 <tbody>
                     {books.map((book) => (
                         <tr key={book.id}>
+                            <td>
+                            {book.cover && (
+                                <img src={book.cover} alt={book.title} />
+                            )}
+                            </td>
                             <Link to={`/books/${book.id}`}>{book.title}</Link>
                             <td>{book.author}</td>
                             <td>{book.owner ? book.owner.name : 'None'}</td>

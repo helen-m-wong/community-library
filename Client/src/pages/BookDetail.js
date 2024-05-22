@@ -21,6 +21,7 @@ function BookDetail() {
                 const data = await response.json();
                 if (response.status === 200) {
                     console.log("Book data retrieved");
+                    console.log(data);
                     setBook(data);
                 } else {
                     console.log("There was an error retrieving the data")
@@ -43,6 +44,7 @@ function BookDetail() {
                     method: 'DELETE'
                 });
                 if (response.status === 204) {
+                    window.alert("Book successfully deleted from the community library");
                     console.log("Book deleted successfully")
                     navigate("/books");
                 } else if (response.status === 403) {
@@ -54,10 +56,6 @@ function BookDetail() {
                 console.log(error);
             }
         }
-    };
-
-    const handleEditBook = () => {
-        navigate(`/books/${id}/edit`);
     };
 
     const handleBorrowBook = () => {
@@ -109,14 +107,20 @@ function BookDetail() {
 
     return (
         <>
+        <div>
             <h2>Book Details</h2>
             <button onClick={handleViewAllBooks}>View all Books</button>
-            <button onClick={handleEditBook}>Edit Book</button>
             <button onClick={deleteBook}>Delete Book</button>
             <button onClick={handleBorrowBook}>Borrow Book</button>
             {showBorrowBook && <BorrowBook onBorrow={handleConfirmBorrow} />}
+        </div>
+
+            {book.cover && (
+                <img src={book.cover} alt={book.title} />
+            )}
             <p>Title: {book.title}</p>
             <p>Author: {book.author}</p>
+            <p>Genre: {book.genre}</p>
             <p>Publication Date: {book.pub_date}</p>
             <p>Owner: {book.owner ? book.owner.name : 'None'}</p>
             <p>Borrower: {book.borrower ? (
