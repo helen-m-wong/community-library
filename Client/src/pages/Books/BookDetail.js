@@ -1,6 +1,7 @@
 import React, { useState, useEffect }  from 'react';
 import { useParams, useNavigate, Link } from "react-router-dom";
 import BorrowBook from '../../components/BorrowBook';
+import './Books.css';
 
 function BookDetail() {
 
@@ -106,29 +107,35 @@ function BookDetail() {
     }
 
     return (
-        <>
-        <div>
+        <div className="books-container">
             <h2>Book Details</h2>
-            <button onClick={handleViewAllBooks}>View all Books</button>
-            <button onClick={deleteBook}>Delete Book</button>
-            <button onClick={handleBorrowBook}>Borrow Book</button>
+
+            <div className="button-container"> 
+                <button className="book-button" onClick={handleViewAllBooks}>View all Books</button>
+                <button className="book-button" onClick={deleteBook}>Delete Book</button>
+                <button className="book-button" onClick={handleBorrowBook}>Borrow Book</button>
+            </div>
+
             {showBorrowBook && <BorrowBook onBorrow={handleConfirmBorrow} />}
-        </div>
+
 
             {book.cover && (
-                <img src={book.cover} alt={book.title} />
+                <img src={book.cover} alt={book.title} className="book-cover" />
             )}
-            <p>Title: {book.title}</p>
-            <p>Author: {book.author}</p>
-            <p>Genre: {book.genre}</p>
-            <p>Publication Date: {book.pub_date}</p>
-            <p>Owner: {book.owner ? (
-                <Link to={`/members/${book.owner.id}`}>{book.owner.name}</Link>
-            ) : ('None')}</p>
-            <p>Borrower: {book.borrower ? (
-                <Link to={`/members/${book.borrower.id}`}>{book.borrower.name}</Link>
-            ) : ('None')}</p>
-        </>
+
+            <div className="book-info">
+                <p>Title: {book.title}</p>
+                <p>Author: {book.author}</p>
+                <p>Genre: {book.genre}</p>
+                <p>Publication Date: {book.pub_date}</p>
+                <p>Owner: {book.owner ? (
+                    <Link className="member-name" to={`/members/${book.owner.id}`}>{book.owner.name}</Link>
+                ) : ('None')}</p>
+                <p>Borrower: {book.borrower ? (
+                    <Link className="member-name" to={`/members/${book.borrower.id}`}>{book.borrower.name}</Link>
+                ) : ('None')}</p>
+            </div>
+        </div>
     );
 } 
 

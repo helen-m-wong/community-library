@@ -62,11 +62,11 @@
   cursor: pointer;
   display: inline-block;
   font-family: 'Montserrat', sans-serif; 
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
-  height: 40px;
+  height: 45px;
   line-height: 20px;
-  padding: 10px 16px;
+  padding: 12px 18px;
   transition: color 100ms;
   vertical-align: baseline;
   touch-action: manipulation;

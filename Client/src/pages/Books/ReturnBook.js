@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './Books.css';
 
 function ReturnBook() {
     const [members, setMembers] = useState([]);
@@ -70,34 +71,31 @@ function ReturnBook() {
     };
 
     return (
-        <div>
+        <div className="books-container">
             <h2>Return a Book</h2>
-
-                <>
-                    <p>Who's returning the book?</p>
-                    <select value={selectedMember} onChange={handleSelectMember}>
-                        <option value="">Select Member</option>
-                        {members.map(member => (
-                            <option key={member.id} value={member.id}>
-                                {member.name}
-                            </option>
-                        ))}
-                    </select>
-                    {selectedMember && (
-                        <>
-                            <p>Which book do you want to return?</p>
-                            <select value={selectedBook} onChange={handleSelectBook}>
-                                <option value="">Select Book</option>
-                                {borrowedBooks.map(book => (
-                                    <option key={book.id} value={book.id}>
-                                        {book.title}
-                                    </option>
-                                ))}
-                            </select>
-                            <button onClick={handleReturnBook}>Return this Book</button>
-                        </>
-                    )}
-                </>
+                <p>Who's returning the book?</p>
+                <select value={selectedMember} onChange={handleSelectMember}>
+                    <option value="">Select Member</option>
+                    {members.map(member => (
+                        <option key={member.id} value={member.id}>
+                            {member.name}
+                        </option>
+                    ))}
+                </select>
+                {selectedMember && (
+                    <>
+                        <p>Which book do you want to return?</p>
+                        <select className="title-select" value={selectedBook} onChange={handleSelectBook}>
+                            <option value="">Select Book</option>
+                            {borrowedBooks.map(book => (
+                                <option key={book.id} value={book.id}>
+                                    {book.title}
+                                </option>
+                            ))}
+                        </select>
+                        <button className="book-button" onClick={handleReturnBook}>Return this Book</button>
+                    </>
+                )}
         </div>
     );
 }

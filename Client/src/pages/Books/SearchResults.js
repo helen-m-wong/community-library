@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import './Books.css';
 
 function SearchResults() {
 
@@ -12,40 +13,26 @@ function SearchResults() {
     };
 
     return (
-        <>
+        <div className="books-container">
             <h2>Search Results</h2>
             {searchResults.length > 0 ? (
-                <table>
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Title</th>
-                        <th>Author</th>
-                        <th>Owner</th>
-                        <th>Borrower</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {searchResults.map((book) => (
-                        <tr key={book.id}>
-                            <td>
+                <div className="books-grid">
+                {searchResults.map((book) => (
+                    <div key={book.id} className="book-item">
+                        <Link className="book-title" to={`/books/${book.id}`}>
                             {book.cover && (
-                                <img src={book.cover} alt={book.title} />
+                                <img src={book.cover} alt={book.title} className="book-cover" />
                             )}
-                            </td>
-                            <td><Link to={`/books/${book.id}`}>{book.title}</Link></td>
-                            <td>{book.author}</td>
-                            <td>{book.owner ? book.owner.name : 'None'}</td>
-                            <td>{book.borrower ? book.borrower.name : 'None'}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+                            <div>{book.title}</div>
+                        </Link>
+                    </div>
+                ))}
+                </div>
             ) : (
                 <p>No results matching your query were found</p>
             )}
-            <button onClick={navToBooks}>Return to Books</button>
-        </>
+            <button className="book-button" onClick={navToBooks}>Return to Books</button>
+        </div>
     );
 }
 

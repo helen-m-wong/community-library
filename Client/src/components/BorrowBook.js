@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import '../pages/Books/Books.css';
 
 function BorrowBook({ onBorrow }) {
     const [members, setMembers] = useState([]);
@@ -34,15 +35,19 @@ function BorrowBook({ onBorrow }) {
     return (
         <div>
             <h3>Who's borrowing the book?</h3>
-            <select value={selectedBorrower} onChange={(e) => setSelectedBorrower(e.target.value)}>
-                <option value="">Select Member</option>
-                {members.map((member) => (
-                    <option key={member.id} value={member.id}>
-                        {member.name}
-                    </option>
-                ))}
-            </select>
-            <button onClick={handleConfirmBorrow}>Confirm Borrow</button>
+            <div>
+                <select value={selectedBorrower} onChange={(e) => setSelectedBorrower(e.target.value)}>
+                    <option value="">Select Member</option>
+                    {members.map((member) => (
+                        <option key={member.id} value={member.id}>
+                            {member.name}
+                        </option>
+                    ))}
+                </select>
+            
+            <button className="book-button" onClick={handleConfirmBorrow}>Confirm Borrow</button>
+            </div>
+            
         </div>
     );
 }

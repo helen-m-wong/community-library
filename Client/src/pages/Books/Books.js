@@ -100,11 +100,11 @@ function Books() {
         <div className="books-grid">
             {books.map((book) => (
                 <div key={book.id} className="book-item">
-                    <Link to={`/books/${book.id}`}>
+                    <Link className="book-title" to={`/books/${book.id}`}>
                         {book.cover && (
                             <img src={book.cover} alt={book.title} className="book-cover" />
                         )}
-                        <div className="book-title">{book.title}</div>
+                        <div>{book.title}</div>
                     </Link>
                 </div>
             ))}
