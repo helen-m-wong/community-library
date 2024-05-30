@@ -94,7 +94,7 @@ async function get_all_books(req) {
 
 // Get all books paginated
 async function get_books(req) {
-    var q = datastore.createQuery(BOOK).limit(10);
+    var q = datastore.createQuery(BOOK).limit(15);
     var count_q = datastore.createQuery(BOOK);
     var results = {};
     

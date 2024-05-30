@@ -1,5 +1,6 @@
 import React, { useState, useEffect }  from 'react';
 import { Link, useNavigate } from "react-router-dom";
+import './Books.css';
 
 function Books() {
 
@@ -62,6 +63,10 @@ function Books() {
         }
     };
 
+    const handleAddBook = () => {
+        navigate(`/search-book`);
+    };
+
     const handleSearchQueryChange = (event) => {
         setSearchQuery(event.target.value);
     };
@@ -77,50 +82,38 @@ function Books() {
     };
 
     return (
-        <>
-            <h2>Community Library</h2>
-            <Link to="/search-book">Add Book</Link>
+    <div className="books-container">
+        <h2>Community Library</h2>
+        <button className="book-button" onClick={handleAddBook}>Add Book</button>
 
-
+        <div className="search-container">
             <input 
                 type="text"
                 placeholder="Search by title or author"
                 value={searchQuery}
                 onChange={handleSearchQueryChange}
+                className="search-input"
             />
-            <button onClick={handleSearch}>Search</button>
+            <button className="book-button" onClick={handleSearch}>Search</button>
+        </div>
 
+        <div className="books-grid">
+            {books.map((book) => (
+                <div key={book.id} className="book-item">
+                    <Link to={`/books/${book.id}`}>
+                        {book.cover && (
+                            <img src={book.cover} alt={book.title} className="book-cover" />
+                        )}
+                        <div className="book-title">{book.title}</div>
+                    </Link>
+                </div>
+            ))}
+        </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Title</th>
-                        <th>Author</th>
-                        <th>Owner</th>
-                        <th>Borrower</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {books.map((book) => (
-                        <tr key={book.id}>
-                            <td>
-                            {book.cover && (
-                                <img src={book.cover} alt={book.title} />
-                            )}
-                            </td>
-                            <Link to={`/books/${book.id}`}>{book.title}</Link>
-                            <td>{book.author}</td>
-                            <td>{book.owner ? book.owner.name : 'None'}</td>
-                            <td>{book.borrower ? book.borrower.name : 'None'}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            {nextLink && (
-                <button onClick={getNextBooks}>View More</button>
-            )}
-        </>
+        {nextLink && (
+            <button className="book-button" onClick={getNextBooks}>View More</button>
+        )}
+    </div>
     );
 } 
 

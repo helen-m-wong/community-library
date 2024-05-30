@@ -8,10 +8,10 @@ import Members from './pages/Members/Members.js';
 import MemberDetail from './pages/Members/MemberDetail.js';
 import AddMember from './pages/Members/AddMember.js';
 import EditMember from './pages/Members/EditMember.js';
-import Books from './pages/Books.js';
-import BookDetail from './pages/BookDetail.js';
-import SearchResults from './pages/SearchResults.js';
-import ReturnBook from './pages/ReturnBook.js';
+import Books from './pages/Books/Books.js';
+import BookDetail from './pages/Books/BookDetail.js';
+import SearchResults from './pages/Books/SearchResults.js';
+import ReturnBook from './pages/Books/ReturnBook.js';
 import GoogleBooks from './pages/GoogleBook.js';
 import GoogleBookDetail from './pages/GoogleBookDetail.js';
 
