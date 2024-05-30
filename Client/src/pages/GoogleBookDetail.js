@@ -26,7 +26,7 @@ function GoogleBookDetail() {
 
     const handleAddToLibrary = async () => {
         const newBook = {
-            cover: cleanImageUrl(book.volumeInfo.imageLinks.thumbnail),
+            cover: book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : null,
             title: book.volumeInfo.title,
             author: book.volumeInfo.authors.join(', '),
             genre: book.volumeInfo.categories[0],

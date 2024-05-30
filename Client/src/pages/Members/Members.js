@@ -1,9 +1,11 @@
 import React, { useState, useEffect }  from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import './Members.css';
 
 function Members() {
 
     const [members, setMembers] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const getMembers = async() => {
@@ -23,11 +25,15 @@ function Members() {
         getMembers();
     }, []);
 
+    const handleAddMember = () => {
+        navigate(`/members/add`);
+    };
+
     return (
-        <>
+        <div className="members-container">
             <h2>Members</h2>
-            <Link to="/members/add">Add Member</Link>
-            <table>
+            <button className="member-button" onClick={handleAddMember}>Add Member</button>
+            <table className="members">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -47,7 +53,7 @@ function Members() {
                     ))}
                 </tbody>
             </table>
-        </>
+        </div>
     );
 } 
 

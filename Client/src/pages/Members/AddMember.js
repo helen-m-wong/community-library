@@ -1,5 +1,6 @@
 import React, { useState }  from 'react';
 import { useNavigate } from "react-router-dom";
+import './Members.css';
 
 function AddMember() {
 
@@ -8,7 +9,8 @@ function AddMember() {
     const [address, setAddress] = useState('');
     const navigate = useNavigate();
 
-    const addMember = async () => {
+    const addMember = async (e) => {
+        e.preventDefault();
         const newMember = { name, email, address };
 
         try {
@@ -36,41 +38,53 @@ function AddMember() {
     };
 
     return (
-        <>
-        <article>
+        <div className="member-container">
             <h2>Add a Member</h2>
-            <form onSubmit={(e) => { e.preventDefault();}}>
-                <fieldset>
+            <form className="member-form" onSubmit={addMember}>
+                <div className="col-10">
                     <label htmlFor="name" className="required">Name</label>
+                </div>
+                <div className="col-90">
                     <input
+                        className="member-input"
                         type="text"
                         value={name}
                         onChange={e => setName(e.target.value)} 
-                        id="name" />
-                    
+                        id="name"
+                        required/>
+                </div>
+
+                <div className="col-10">
                     <label htmlFor="email" className="required">Email</label>
+                </div>
+                <div className="col-90">
                     <input
+                        className="member-input"
                         type="text"
                         value={email}
                         onChange={e => setEmail(e.target.value)} 
-                        id="email" />
+                        id="email" 
+                        required />
+                </div>
 
+                <div className="col-10">
                     <label htmlFor="address" className="required">Address</label>
+                </div>
+                <div className="col-90">
                     <input
+                        className="member-input"
                         type="text"
                         value={address}
                         onChange={e => setAddress(e.target.value)} 
                         id="address" />
-
-                    <button type="submit" onClick={addMember} id="submit">
+                </div>
+                    <button className="member-button" type="submit" id="submit">
                         Add
                     </button>
-                </fieldset>
                 </form>
-            </article>
-            <button onClick={navToMembers}>Back to Members</button>
-
-        </>
+            <br></br>
+            <button className="member-button" onClick={navToMembers}>Back to Members</button>
+        </div>
     );
   }
   

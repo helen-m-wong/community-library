@@ -122,7 +122,9 @@ function BookDetail() {
             <p>Author: {book.author}</p>
             <p>Genre: {book.genre}</p>
             <p>Publication Date: {book.pub_date}</p>
-            <p>Owner: {book.owner ? book.owner.name : 'None'}</p>
+            <p>Owner: {book.owner ? (
+                <Link to={`/members/${book.owner.id}`}>{book.owner.name}</Link>
+            ) : ('None')}</p>
             <p>Borrower: {book.borrower ? (
                 <Link to={`/members/${book.borrower.id}`}>{book.borrower.name}</Link>
             ) : ('None')}</p>

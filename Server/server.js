@@ -129,15 +129,6 @@ function get_book(id) {
     });
 }
 
-// Create a book
-/*
-function post_book(title, author, pub_date) {
-    var key = datastore.key(BOOK);
-    const new_book = { "title": title, "author": author, "pub_date": pub_date, "owner": null, "borrower": null };
-    return datastore.save({ "key": key, "data": new_book }).then(() => { return key });
-    }
-*/
-
 // Add book to database from Google Books API
 function post_book(cover, title, author, genre, pub_date) {
     var key = datastore.key(BOOK);
@@ -150,16 +141,7 @@ function post_book(cover, title, author, genre, pub_date) {
         "owner": null,
         "borrower": null };
     return datastore.save({ "key": key, "data": new_book }).then(() => { return key });
-    }
-
-/*
-// Edit a book with PATCH
-function patch_book(id, title, author, pub_date, owner, borrower) {
-    const key = datastore.key([BOOK, parseInt(id, 10)]);
-    const book = { "title": title, "author": author, "pub_date": pub_date, "owner": owner, "borrower": borrower };
-    return datastore.save({ "key": key, "data": book });
 }
-*/
 
 // Assign book to member's owned_books
 function own_book(req, member_id, name, email, address, owned_books, borrowed_books, book_id, title, author) {
@@ -436,42 +418,6 @@ routerBooks.get('/:id', function (req, res) {
         });
 });
 
-/*
-// Create a book
-routerBooks.post('/', function (req, res) {
-    var propCheck = true
-
-    const numProp = Object.keys(req.body).length;
-    if (numProp !== 3) {
-        propCheck = false
-    }
-
-    const reqProp = ["title", "author", "pub_date"];
-    for (const [key, value] of Object.entries(req.body)) {
-        if (reqProp.includes(key) == false) {
-            propCheck = false
-        }
-    }
-
-    if (propCheck == false) {
-        res.status(400).json({ 'Error': 'The request object is missing at least one of the required attributes or has extraneous attributes' })
-    } else {
-        post_book(req.body.title, req.body.author, req.body.pub_date)
-        .then(key => { 
-            res.status(201).json({ 
-                'id': parseInt(key.id),
-                'title': req.body.title,
-                'author': req.body.author,
-                'pub_date': req.body.pub_date,
-                'owner': null,
-                'borrower': null,
-                'self': req.protocol + "://" + req.get("host") + "/books/" + key.id
-            });
-        });
-    }
-});
-*/
-
 // Add book to database from Google Books API
 routerBooks.post('/', function (req, res) {
     const { cover, title, author, genre, pub_date } = req.body;
@@ -487,64 +433,6 @@ routerBooks.post('/', function (req, res) {
             });
         });
 });
-
-/*
-// Edit a book with PATCH
-routerBooks.patch('/:id', function (req, res) {
-    numProp = Object.keys(req.body).length;
-    if (numProp > 3) {
-        res.status(400).json({ 'Error': 'The request object has extraneous attributes' });
-        return
-    }
-
-    var titleProp = false
-    var authorProp = false
-    var pubProp = false
-    for (const [key, value] of Object.entries(req.body)) {
-        if (key == "title") {
-            titleProp = true
-        }
-        if (key == "author") {
-            authorProp = true
-        }
-        if (key == "pub_date") {
-            pubProp = true
-        }
-    }
-
-    get_book(req.params.id)
-        .then((book) => {
-            if (book[0] === undefined || book[0] === null) {
-                res.status(404).json({ 'Error': 'No book with this id exists' });
-                return
-            } else {
-                var title = book[0].title
-                var author = book[0].author
-                var pub_date = book[0].pub_date
-                if (titleProp == true) {
-                    title = req.body.title
-                }
-                if (authorProp == true) {
-                    author = req.body.author
-                }
-                if (pubProp == true) {
-                    pub_date = req.body.pub_date
-                }
-
-                patch_book(req.params.id, title, author, pub_date, book[0].owner, book[0].borrower)
-                .then(res.status(200).json({
-                    'id': req.params.id,
-                    'title': title,
-                    'author': author,
-                    'pub_date': pub_date,
-                    'owner': book[0].owner,
-                    'borrower': book[0].borrower,
-                    'self': req.protocol + "://" + req.get("host") + "/books/" + req.params.id
-                }))
-            }
-        })
-});
-*/
 
 // Assign owner to a book
 routerMembers.put('/:member_id/books/:book_id', function (req, res) {

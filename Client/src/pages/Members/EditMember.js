@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate} from "react-router-dom";
+import './Members.css';
 
 function EditMember() {
 
@@ -34,7 +35,8 @@ function EditMember() {
         getMember();
     }, [id]);
 
-    const editMember = async () => {
+    const editMember = async (e) => {
+        e.preventDefault();
         try {
             const url = `/members/${id}`;
             const response = await fetch(url, {
@@ -55,40 +57,59 @@ function EditMember() {
         }
     };
 
+    const navToMember = () => {
+        navigate(`/members/${id}`);
+    };
 
     return (
-        <>
+        <div className="member-container">
             <h2>Edit Member</h2>
-            <form onSubmit={(e) => {e.preventDefault();}}>
-                <fieldset>
+            <form className="member-form" onSubmit={editMember}>
+                <div className="col-10">
                     <label for="name">Name</label>
+                </div>
+                <div className="col-90">
                     <input 
                         type="text" 
                         name="name" 
                         value={name} 
                         onChange={e => setName(e.target.value)}
-                        id="name"/>
+                        id="name"
+                        required />
+                </div>
+
+                <div className="col-10">
                     <label for="email">Email</label>
+                </div>
+                <div className="col-90">
                     <input
                         type="text"
                         name="email"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
-                        id="email"/>
+                        id="email"
+                        required />
+                </div>
+
+                <div className="col-10">
                     <label for="address">Address</label>
+                </div>
+                <div className="col-90"> 
                     <input
                         type="text"
                         name="address"
                         value={address}
                         onChange={e => setAddress(e.target.value)}
                         id="address"/>
-                    <button
-                        type="submit"
-                        onClick={editMember}
-                        id="submit">Save</button>
-                </fieldset>
+                </div>
+
+                <button className="member-button" type="submit" id="submit">
+                    Save
+                </button>
             </form>
-        </>
+            <br></br>
+            <button className="member-button" onClick={navToMember}>Back to Member</button>
+        </div>
     );
 } 
 
