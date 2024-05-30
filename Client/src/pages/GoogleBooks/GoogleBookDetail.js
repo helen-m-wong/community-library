@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import DOMPurify from 'dompurify';
-import OwnerSelection from '../components/SelectOwner';
+import OwnerSelection from '../../components/SelectOwner';
+import './GoogleBooks.css';
 
 function GoogleBookDetail() {
     const { id } = useParams();
@@ -88,24 +89,36 @@ function GoogleBookDetail() {
     };
     
     return (
-        <div>
-            <h1>{book.volumeInfo.title}</h1>
-            {book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.thumbnail && (
-                <img src={cleanImageUrl(book.volumeInfo.imageLinks.thumbnail)} alt={book.volumeInfo.title} />
-            )}
-            <button onClick={handleAddToLibrary}>Add to Library</button>
-            <button onClick={() => {
-                navigate('/search-book', { state: { books: location.state.books, query: location.state.query, searchInitiated: location.state.searchInitiated } });
-            }}>
-                Return to Search Results
-            </button>
+        <div className="google-container">
+            <h2>{book.volumeInfo.title}</h2>
+
+            <div className="button-container">
+                <button className="google-button" onClick={handleAddToLibrary}>Add to Library</button>
+                <button className="google-button" onClick={() => {
+                    navigate('/search-book', { state: { books: location.state.books, query: location.state.query, searchInitiated: location.state.searchInitiated } });
+                }}>
+                    Return to Search Results
+                </button>
+            </div>
+
             {bookAdded && bookId !== null && <OwnerSelection onSelectOwner={handleOwnerSelection} />}
-            <p>Author: {book.volumeInfo.authors ? book.volumeInfo.authors.join(', ') : 'Unknown'}</p>
-            <p>Genre: {book.volumeInfo.categories ? book.volumeInfo.categories[0] : 'Unknown'}</p>
-            <p>Publication Date: {book.volumeInfo.publishedDate}</p>
-            <p>Publisher: {book.volumeInfo.publisher ? book.volumeInfo.publisher : 'Unknown'}</p>
-            <p>Description:</p>
-            <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(book.volumeInfo.description) }}></p>
+            <div className="google-item">
+                {book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.thumbnail && (
+                    <img className="google-cover" src={cleanImageUrl(book.volumeInfo.imageLinks.thumbnail)} alt={book.volumeInfo.title} />
+                )}
+                <div className="google-book-info">
+                    <p><b>Author: </b>{book.volumeInfo.authors ? book.volumeInfo.authors.join(', ') : 'Unknown'}</p>
+                    <p><b>Genre: </b>{book.volumeInfo.categories ? book.volumeInfo.categories[0] : 'Unknown'}</p>
+                    <p><b>Publication Date: </b>{book.volumeInfo.publishedDate}</p>
+                    <p><b>Publisher: </b>{book.volumeInfo.publisher ? book.volumeInfo.publisher : 'Unknown'}</p>
+                </div>
+            </div>
+                   <div className="description">
+                        <p><b>Description: </b></p>
+                        <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(book.volumeInfo.description) }}></p>
+                    </div>
+
+            
         </div>
     );
 }

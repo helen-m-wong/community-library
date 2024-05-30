@@ -6,8 +6,6 @@ import './Books.css';
 function BookDetail() {
 
     const { id } = useParams();
-    console.log("Book ID:", id);
-
     const [book, setBook] = useState(null);
     const [showBorrowBook, setShowBorrowBook] = useState(false);
     const navigate = useNavigate();
@@ -18,11 +16,9 @@ function BookDetail() {
                 const url = `/books/${id}`;
                 console.log("Fetching book data from:", url);
                 const response = await fetch(url);
-
                 const data = await response.json();
                 if (response.status === 200) {
                     console.log("Book data retrieved");
-                    console.log(data);
                     setBook(data);
                 } else {
                     console.log("There was an error retrieving the data")
@@ -66,7 +62,6 @@ function BookDetail() {
     const handleConfirmBorrow = async (borrowerId, borrowerName) => {
         console.log('Borrower ID:', borrowerId);
         console.log('Borrower name:', borrowerName)
-
         try {
             const response = await fetch(`/books/${id}/members/${borrowerId}`, {
                 method: 'PUT',
@@ -74,7 +69,6 @@ function BookDetail() {
                     'Content-Type': 'application/json'
                 }
             });
-    
             if (response.status === 200) {
                 console.log('Book borrowed successfully');
                 setBook(prevBook => ({ ...prevBook,
@@ -117,7 +111,6 @@ function BookDetail() {
             </div>
 
             {showBorrowBook && <BorrowBook onBorrow={handleConfirmBorrow} />}
-
 
             {book.cover && (
                 <img src={book.cover} alt={book.title} className="book-cover" />

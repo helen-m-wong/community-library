@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
+import './GoogleBooks.css';
 
 function GoogleBooks() {
     const [query, setQuery] = useState('');
@@ -53,33 +54,40 @@ function GoogleBooks() {
     };
 
     return (
-        <div>
-            <h1>Search for Book to Add to Library</h1>
-            <input 
-                type="text" 
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Enter book title or author"
-            />
-            <button onClick={handleSearch}>Search</button>
+        <div className="google-container">
+            <h2>Search for Book to Add to Library</h2>
+
+            <div className="google-search-container">
+                <input 
+                    type="text" 
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Enter book title or author"
+                    className="search-input"
+                />
+                <button class="google-button" onClick={handleSearch}>Search</button>
+            </div>
+
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {loading && <p>Loading...</p>}
+            
             <div>
                 {searchInitiated && !loading && books.length === 0 && <p>No books found</p>}
                 {books.map((book) => (
-                    <div key={book.id} style={{ border: '1px solid black', padding: '10px', margin: '10px' }}>
+                    <div key={book.id} className="google-items">
                         {book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.thumbnail && (
-                            <img src={cleanImageUrl(book.volumeInfo.imageLinks.thumbnail)} alt={book.volumeInfo.title} />
+                            <img className="google-cover" src={cleanImageUrl(book.volumeInfo.imageLinks.thumbnail)} alt={book.volumeInfo.title}/>
                         )}
-                        <h2>
-                            <Link
-                                to={`/google-book/${book.id}`}
-                                state={{ books, query, searchInitiated }}>
-                                {book.volumeInfo.title}
-                            </Link>
-                        </h2>
-                        <p>Author: {book.volumeInfo.authors ? book.volumeInfo.authors.join(', ') : 'Unknown'}</p>
-                        <p>Genre: {book.volumeInfo.categories ? book.volumeInfo.categories[0] : 'Unknown'}</p>
+                        <div className="google-details">
+                                <Link
+                                    className="google-title"
+                                    to={`/google-book/${book.id}`}
+                                    state={{ books, query, searchInitiated }}>
+                                    {book.volumeInfo.title}
+                                </Link>
+                            <p className="google-heading">Author: {book.volumeInfo.authors ? book.volumeInfo.authors.join(', ') : 'Unknown'}</p>
+                            <p className="google-heading">Genre: {book.volumeInfo.categories ? book.volumeInfo.categories[0] : 'Unknown'}</p>
+                        </div>
                     </div>
                 ))}
             </div>

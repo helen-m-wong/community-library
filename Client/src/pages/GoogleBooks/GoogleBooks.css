@@ -1,0 +1,110 @@
+.google-container {
+    font-family: 'Montserrat', sans-serif;
+    padding: 10px;
+    padding-left: 40px;
+    padding-right: 40px;
+    font-size: 1.4rem;
+    padding-bottom: 100px;
+  }
+
+.google-container h2 {
+    font-size: 2rem;
+}
+
+.google-search-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* align items to the right */
+    margin-bottom: 20px;
+}
+
+.search-input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+    font-family: 'Source Sans 3', sans-serif; 
+    font-size: 1.2rem;
+    width: 375px;
+    margin-right: 10px;
+}
+
+.google-button {
+    background-color: #8FC7CC;
+    border-radius: 8px;
+    border-style: none;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif; 
+    font-size: 18px;
+    font-weight: 500;
+    height: 45px;
+    line-height: 20px;
+    padding: 12px 18px;
+    transition: color 100ms;
+    vertical-align: baseline;
+    touch-action: manipulation;
+}
+  
+.google-button:hover,
+.google-button:focus {
+    background-color: #C7E3E5;
+}
+
+.google-items {
+    display: flex;
+    align-items: center;
+    border: 1px solid black;
+    padding: 10px;
+    margin: 10px;
+}
+
+.google-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.google-cover {
+    width: 150px; /* fixed width */
+    height: 225px; /* fixed height */
+    object-fit: cover; /* ensures the image covers the entire area */
+}
+
+.google-title {
+    margin-left: 50px;
+    margin-bottom: 10px;
+    color: #7265B8; 
+    font-size: 1.6rem;
+    text-decoration: none; 
+    cursor: pointer;
+}
+
+.google-title:hover {
+    text-decoration: underline; 
+}
+
+.google-heading {
+    margin-left: 50px;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-size: 1.2rem;
+}
+
+.google-item {
+    display: flex;
+    align-items: flex-start;
+}
+
+.google-book-info {
+    margin-left: 55px;
+    font-family: 'Source Sans 3', sans-serif; 
+    font-size: 1.3rem;
+}
+
+.description {
+    margin-top: 30px;
+    font-family: 'Source Sans 3', sans-serif; 
+    font-size: 1.3rem;
+}

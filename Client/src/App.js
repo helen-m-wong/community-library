@@ -12,8 +12,8 @@ import Books from './pages/Books/Books.js';
 import BookDetail from './pages/Books/BookDetail.js';
 import SearchResults from './pages/Books/SearchResults.js';
 import ReturnBook from './pages/Books/ReturnBook.js';
-import GoogleBooks from './pages/GoogleBook.js';
-import GoogleBookDetail from './pages/GoogleBookDetail.js';
+import GoogleBooks from './pages/GoogleBooks/GoogleBook.js';
+import GoogleBookDetail from './pages/GoogleBooks/GoogleBookDetail.js';
 
 function App() {
 

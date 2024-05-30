@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import '../pages/GoogleBooks/GoogleBooks.css';
 
 function OwnerSelection({ onSelectOwner }) {
     const [members, setMembers] = useState([]);
@@ -48,7 +49,7 @@ function OwnerSelection({ onSelectOwner }) {
                         </option>
                     ))}
                 </select>
-                <button type="submit">Assign Owner</button>
+                <button className="google-button" type="submit">Assign Owner</button>
             </form>
         </div>
     );

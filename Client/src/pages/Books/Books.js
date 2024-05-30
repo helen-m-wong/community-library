@@ -102,7 +102,7 @@ function Books() {
                 <div key={book.id} className="book-item">
                     <Link className="book-title" to={`/books/${book.id}`}>
                         {book.cover && (
-                            <img src={book.cover} alt={book.title} className="book-cover" />
+                            <img className="book-cover" src={book.cover} alt={book.title}/>
                         )}
                         <div>{book.title}</div>
                     </Link>
