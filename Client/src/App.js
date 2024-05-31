@@ -1,8 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import './App.css';
-
+import Home from './pages/Home/Home.js';
 import NavBar from './components/NavBar.js';
 import Members from './pages/Members/Members.js';
 import MemberDetail from './pages/Members/MemberDetail.js';
@@ -24,6 +23,7 @@ function App() {
         <main>
           <section>
             <Routes>
+              <Route path="/" element={<Home />} />
               <Route path="/members" element={<Members />} />
               <Route path="/members/:id" element={<MemberDetail />} />
               <Route path="/members/add" element={<AddMember />} />
