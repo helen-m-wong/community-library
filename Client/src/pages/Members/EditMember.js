@@ -5,20 +5,18 @@ import './Members.css';
 function EditMember() {
 
     const { id } = useParams();
-    console.log("Member ID:", id);
-
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
     const navigate = useNavigate();
+    const API_URL = "https://community-library-410206.wl.r.appspot.com";
 
     useEffect(() => {
         const getMember = async () => {
             try {
-                const url = `/members/${id}`;
+                const url = API_URL + `/members/${id}`;
                 console.log("Fetching member data from:", url);
                 const res = await fetch(url);
-
                 const data = await res.json();
                 if (res.status === 200) {
                     console.log("member data retrieved");
@@ -38,7 +36,7 @@ function EditMember() {
     const editMember = async (e) => {
         e.preventDefault();
         try {
-            const url = `/members/${id}`;
+            const url = API_URL + `/members/${id}`;
             const response = await fetch(url, {
                 method: 'PATCH',
                 headers: {
@@ -48,7 +46,7 @@ function EditMember() {
             });
             if (response.status === 200) {
                 console.log("Member data updated successfully");
-                navigate(url);
+                navigate(`/members/${id}`);
             } else {
                 console.log("Error updating member data");
             }

@@ -9,6 +9,7 @@ function GoogleBooks() {
     const [searchInitiated, setSearchInitiated] = useState(false);
     const [loading, setLoading] = useState(false);
     const location = useLocation();
+    const API_URL = "https://community-library-410206.wl.r.appspot.com";
 
     // Populates search results from passed state or resets state
     useEffect(() => {
@@ -35,7 +36,7 @@ function GoogleBooks() {
         setSearchInitiated(true);
         setLoading(true); 
         try {
-            const response = await fetch(`/search-books?query=${query}`);
+            const response = await fetch(API_URL + `/search-books?query=${query}`);
             const data = await response.json();
             if (response.status === 200) {
                 setBooks(data);

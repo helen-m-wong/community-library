@@ -7,11 +7,12 @@ function MemberDetail() {
     const { id } = useParams();
     const [member, setMember] = useState(null);
     const navigate = useNavigate();
+    const API_URL = "https://community-library-410206.wl.r.appspot.com";
 
     useEffect(() => {
         const getMember = async() => {
             try {
-                const url = `/members/${id}`;
+                const url = API_URL + `/members/${id}`;
                 const response = await fetch(url);
                 const data = await response.json();
                 if (response.status === 200) {
@@ -31,7 +32,7 @@ function MemberDetail() {
         const confirmation = window.confirm("Are you sure you want to delete this member?");
         if (confirmation) {
             try {
-                const url = `/members/${id}`;
+                const url = API_URL + `/members/${id}`;
                 const response = await fetch(url, {
                     method: 'DELETE'
                 });

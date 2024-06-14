@@ -4,11 +4,12 @@ import '../pages/Books/Books.css';
 function BorrowBook({ onBorrow }) {
     const [members, setMembers] = useState([]);
     const [selectedBorrower, setSelectedBorrower] = useState('');
+    const API_URL = "https://community-library-410206.wl.r.appspot.com";
 
     useEffect(() => {
         const getMembers = async () => {
             try {
-                const res = await fetch('/members');
+                const res = await fetch(API_URL + '/members');
                 if (res.status === 200) {
                     const data = await res.json();
                     console.log("Members data retrieved");

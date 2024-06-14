@@ -11,6 +11,7 @@ function GoogleBookDetail() {
     const [bookId, setBookId] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
+    const API_URL = "https://community-library-410206.wl.r.appspot.com";
 
     useEffect(() => {
         const fetchBookDetails = async () => {
@@ -35,7 +36,7 @@ function GoogleBookDetail() {
         };
 
         try {
-            const response = await fetch('/books', {
+            const response = await fetch(API_URL + '/books', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -68,7 +69,7 @@ function GoogleBookDetail() {
         const confirmSelection = window.confirm(`Are you sure you want to assign this book to ${ownerName}?`);
         if (confirmSelection) {
             try {
-                const response = await fetch(`/members/${ownerId}/books/${bookId}`, {
+                const response = await fetch(API_URL + `/members/${ownerId}/books/${bookId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'

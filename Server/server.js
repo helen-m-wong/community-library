@@ -579,7 +579,7 @@ routerMembers.delete('/:id', function (req, res) {
 // Search books by title or author using Google Books API
 app.get('/search-books', async (req, res) => {
     const { query } = req.query;
-    const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}&key=${GOOGLE_BOOKS_API_KEY}&maxResults=5`;
+    const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}&key=${GOOGLE_BOOKS_API_KEY}&maxResults=8`;
     if (!query) {
         return res.status(400).json({ 'Error': 'Query parameter is required' });
     }

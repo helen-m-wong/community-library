@@ -9,11 +9,12 @@ function BookDetail() {
     const [book, setBook] = useState(null);
     const [showBorrowBook, setShowBorrowBook] = useState(false);
     const navigate = useNavigate();
+    const API_URL = "https://community-library-410206.wl.r.appspot.com";
 
     useEffect(() => {
         const getBook = async() => {
             try {
-                const url = `/books/${id}`;
+                const url = API_URL + `/books/${id}`;
                 console.log("Fetching book data from:", url);
                 const response = await fetch(url);
                 const data = await response.json();
@@ -36,7 +37,7 @@ function BookDetail() {
 
         if (confirmation) {
             try {
-                const url = `/books/${id}`;
+                const url = API_URL + `/books/${id}`;
                 const response = await fetch(url, {
                     method: 'DELETE'
                 });
@@ -63,7 +64,7 @@ function BookDetail() {
         console.log('Borrower ID:', borrowerId);
         console.log('Borrower name:', borrowerName)
         try {
-            const response = await fetch(`/books/${id}/members/${borrowerId}`, {
+            const response = await fetch(API_URL + `/books/${id}/members/${borrowerId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

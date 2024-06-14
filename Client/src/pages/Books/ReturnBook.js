@@ -6,11 +6,12 @@ function ReturnBook() {
     const [selectedMember, setSelectedMember] = useState('');
     const [borrowedBooks, setBorrowedBooks] = useState([]);
     const [selectedBook, setSelectedBook] = useState('');
+    const API_URL = "https://community-library-410206.wl.r.appspot.com";
 
     useEffect(() => {
         const getMembers = async () => {
             try {
-                const res = await fetch('/members');
+                const res = await fetch(API_URL + '/members');
                 if (res.status === 200) {
                     const data = await res.json();
                     setMembers(data.members);
@@ -27,7 +28,7 @@ function ReturnBook() {
     useEffect(() => {
         const getBorrowedBooks = async () => {
             try {
-                const res = await fetch(`/members/${selectedMember}`);
+                const res = await fetch(API_URL + `/members/${selectedMember}`);
                 if (res.status === 200) {
                     const data = await res.json();
                     console.log(data);
@@ -55,7 +56,7 @@ function ReturnBook() {
 
     const handleReturnBook = async () => {
         try {
-            const res = await fetch(`/members/${selectedMember}/books/${selectedBook}`, {
+            const res = await fetch(API_URL + `/members/${selectedMember}/books/${selectedBook}`, {
                 method: 'DELETE'
             });
             if (res.status === 204) {

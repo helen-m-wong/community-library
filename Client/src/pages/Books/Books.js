@@ -9,11 +9,12 @@ function Books() {
     const [searchQuery, setSearchQuery] = useState('');
     const [nextLink, setNextLink] = useState(null);
     const navigate = useNavigate();
+    const API_URL = "https://community-library-410206.wl.r.appspot.com";
 
     useEffect(() => {
         const getBooks = async() => {
             try {
-                const res = await fetch('/books');
+                const res = await fetch(API_URL + '/books');
                 const data = await res.json();
                 if (res.status === 200) {
                     console.log("Books data retrieved");
@@ -33,7 +34,7 @@ function Books() {
     useEffect(() => {
         const getAllBooks = async() => {
             try {
-                const res = await fetch('/books/all');
+                const res = await fetch(API_URL + '/books/all');
                 const data = await res.json();
                 if (res.status === 200) {
                     console.log("All books data retrieved");

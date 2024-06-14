@@ -8,13 +8,14 @@ function AddMember() {
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
     const navigate = useNavigate();
+    const API_URL = "https://community-library-410206.wl.r.appspot.com";
 
     const addMember = async (e) => {
         e.preventDefault();
         const newMember = { name, email, address };
 
         try {
-            const response = await fetch('/members', {
+            const response = await fetch(API_URL + '/members', {
                 method: 'POST',
                 body: JSON.stringify(newMember),
                 headers: {

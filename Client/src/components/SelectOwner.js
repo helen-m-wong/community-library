@@ -4,11 +4,12 @@ import '../pages/GoogleBooks/GoogleBooks.css';
 function OwnerSelection({ onSelectOwner }) {
     const [members, setMembers] = useState([]);
     const [selectedOwner, setSelectedOwner] = useState('');
+    const API_URL = "https://community-library-410206.wl.r.appspot.com";
 
     useEffect(() => {
         const getMembers = async() => {
             try {
-                const res = await fetch('/members');
+                const res = await fetch(API_URL + '/members');
                 const data = await res.json();
                 if (res.status === 200) {
                     console.log("Members data retrieved");
